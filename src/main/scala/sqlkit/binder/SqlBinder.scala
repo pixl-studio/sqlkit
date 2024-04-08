@@ -33,8 +33,12 @@ trait SqlBinder[T] {
       override def fromSql(o: Object): Option[T] = {
         if (o == null) None else Some(self.fromSql(o))
       }
-      override def toSql(v: Option[T], statement: PreparedStatement, index: Int): Unit = {
-        self.toSql(v.getOrElse(null.asInstanceOf[T]), statement, index)
+      override def toSql(mv: Option[T], statement: PreparedStatement, index: Int): Unit = {
+        mv.map { v =>
+          self.toSql(v, statement, index)
+        }.getOrElse {
+          statement.setNull(index, java.sql.Types.TIMESTAMP)
+        }
       }
     }
   }
@@ -46,6 +50,8 @@ object SqlBinder {
 
   implicit val uuidToSql = new UUIDToSql()
   implicit val stringToSql = new StringToSql()
+
+  implicit val booleanToSql = new BooleanToSql()
 
   implicit val shortToSql = new ShortToSql()
   implicit val intToSql = new IntToSql()

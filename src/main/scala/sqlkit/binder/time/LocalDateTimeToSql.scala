@@ -10,6 +10,7 @@ class LocalDateTimeToSql extends SqlBinder[LocalDateTime] {
   override def fromSql(o: Object): LocalDateTime = {
     o match {
       case s: Date => LocalDateTime.from(s.toInstant)
+      case s: Timestamp => s.toLocalDateTime
       case _ => unwrap(o.toString)
     }
   }

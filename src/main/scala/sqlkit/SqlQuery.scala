@@ -62,18 +62,22 @@ case class SqlQuery[T](
     * @return
     */
   def list(offset: Long, limit: Long)(implicit session: SqlSession): SqlList[T] = {
+    list(Some(offset), Some(limit))
+  }
+
+  def list(offset: Option[Long], limit: Option[Long])(implicit session: SqlSession): SqlList[T] = {
 
     val countSql = this.copy(
       query = "(?si)SELECT.*FROM".r.replaceFirstIn(this.query, "SELECT COUNT(*) FROM")
     ).as(row => row.get[Long](1))
 
-    val total = countSql.exec { rs => rs.nextOption } getOrElse 0L
+    val count = countSql.exec { rs => rs.nextOption } getOrElse 0L
 
     val xs = this.copy(
-      query = this.query + s" LIMIT ${offset}, ${limit}"
+      query = this.query + limit.map(l => s" LIMIT $l").getOrElse("") + offset.map(o => s" OFFSET $o").getOrElse("")
     ).list
 
-    SqlList[T](xs, offset, limit, total)
+    SqlList[T](xs, count=count, offset=offset, limit=limit)
   }
 
   def singleF(implicit session: SqlSession, ec: ExecutionContext): Future[Option[T]] = {

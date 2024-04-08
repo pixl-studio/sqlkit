@@ -21,6 +21,18 @@ abstract class SqlTable[T <: SqlModel[T]] {
     """.as(model)
   }
 
+  def list(implicit session: SqlSession): List[T] = {
+    withSql(table) { model =>
+      selectSql(model)
+    }.list
+  }
+
+  def list(offset:Option[Long], limit:Option[Long])(implicit session: SqlSession = autoSession): SqlList[T] = {
+    withSql(table) { model =>
+      selectSql(model)
+    }.list(offset, limit)
+  }
+
   def where(whereSql: TableDef => SqlQuery[_])(implicit session: SqlSession = autoSession): SqlQuery[T] = {
     withSql(table) { model =>
       val q = whereSql(model).as(model)
@@ -37,6 +49,7 @@ abstract class SqlTable[T <: SqlModel[T]] {
       .on("id" -> id)
       .single
   }
+
 
   def insert(entity: T)(implicit session: SqlSession = autoSession): T = {
     val result = insertSql(entity).exec

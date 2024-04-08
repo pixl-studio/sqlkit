@@ -2,7 +2,7 @@
 
 val scala3Version = "3.1.0"
 
-lazy val root = project
+lazy val sqlkit = project
   .in(file("."))
   .settings(
     name := "sqlkit",

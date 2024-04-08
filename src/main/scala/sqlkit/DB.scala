@@ -43,7 +43,7 @@ object DB {
 
   // ---
 
-  def withSession[T](dataSource: String = defaultSource)(f: SqlSession => T) = {
+  def withSession[T](dataSource: String = defaultSource)(f: SqlSession => T): T = {
     f(SqlAuto(dataSource))
   }
 
