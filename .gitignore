@@ -21,3 +21,6 @@ project/local-plugins.sbt
 
 # Visual Studio Code
 .vscode
+
+#jenv
+.java-version
