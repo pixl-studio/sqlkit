@@ -21,13 +21,13 @@ abstract class SqlTable[T <: SqlModel[T]] {
     """.as(model)
   }
 
-  def list(implicit session: SqlSession): List[T] = {
+  def list(implicit session: SqlSession=autoSession): List[T] = {
     withSql(table) { model =>
       selectSql(model)
     }.list
   }
 
-  def list(offset:Option[Long], limit:Option[Long])(implicit session: SqlSession = autoSession): SqlList[T] = {
+  def listP(offset:Option[Long]=None, limit:Option[Long]=None)(implicit session: SqlSession = autoSession): SqlList[T] = {
     withSql(table) { model =>
       selectSql(model)
     }.list(offset, limit)
