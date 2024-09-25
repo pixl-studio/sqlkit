@@ -8,7 +8,7 @@ lazy val sqlkit = project
     name := "sqlkit",
     version := "0.1",
 
-    scalaVersion := "2.13.10",
+    scalaVersion := "2.13.14",
 
     libraryDependencies ++= Seq(
       "com.zaxxer" % "HikariCP" % "5.1.0",
