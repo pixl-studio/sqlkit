@@ -16,7 +16,7 @@ lazy val sqlkit = project
     libraryDependencies ++= Seq(
       "com.zaxxer" % "HikariCP" % "5.1.0",
 
-      "mysql" % "mysql-connector-java" % "5.1.44" % "test",
+      "mysql" % "mysql-connector-java" % "8.0.33" % "test",
       "org.scalatest" %% "scalatest" % "3.2.11" % "test",
       "org.slf4j" % "slf4j-nop" % "1.7.31" % Test
     )
