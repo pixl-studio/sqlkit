@@ -1,6 +1,6 @@
 package models
 
-import sqlkit.{SqlModelAutoInc, SqlRow, SqlTable, SqlTableDef}
+import sqlkit._
 
 case class Role(
   id: Long,

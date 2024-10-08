@@ -1,6 +1,8 @@
 
 
-val scala3Version = "3.1.0"
+val scala3 = "3.1.0"
+val Scala212 = "2.12.20"
+val Scala213 = "2.13.14"
 
 lazy val sqlkit = project
   .in(file("."))
@@ -8,7 +10,8 @@ lazy val sqlkit = project
     name := "sqlkit",
     version := "0.1",
 
-    scalaVersion := "2.13.14",
+    scalaVersion := Scala213,
+    crossScalaVersions := Seq(Scala212, Scala213),
 
     libraryDependencies ++= Seq(
       "com.zaxxer" % "HikariCP" % "5.1.0",

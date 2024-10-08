@@ -12,13 +12,15 @@ trait SqlSession extends AutoCloseable {
 
   val uuid: String
 
+  val dataSource: String
+
   val schema:Option[String]
 
   protected def getConnection : Connection
 
   private var connection: Connection = null
 
-  val logger = LoggerFactory.getLogger("sqlkit")
+  val logger = LoggerFactory.getLogger("sqlkit.query")
 
   def withConnection[T](f: Connection => T): T = {
     try {
