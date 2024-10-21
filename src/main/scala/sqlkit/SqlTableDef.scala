@@ -34,6 +34,6 @@ abstract class SqlTableDef[T] {
 
   def * = columns
 
-  def toSqlString = if (alias.isEmpty) s"""${table}""" else s"""`${table}` as ${alias}"""
+  def toSqlString = if (alias.isEmpty) s"""${table}""" else s"""${table} as ${alias}"""
 
 }

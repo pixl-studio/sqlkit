@@ -1,7 +1,7 @@
 package sqlkit.binder
 
 import sqlkit.binder.numeric._
-import sqlkit.binder.time.{DurationToSql, InstantToSql, LocalDateTimeToSql, LocalDateToSql, LocalTimeToSql}
+import sqlkit.binder.time.{DurationToSql, InstantToSql, LocalDateTimeToSql, LocalDateToSql, LocalTimeToSql, OffsetDateTimeToSql, ZonedDateTimeToSql}
 
 import java.sql.{PreparedStatement, ResultSet}
 
@@ -65,5 +65,7 @@ object SqlBinder {
   implicit val localTimeToSql = new LocalTimeToSql()
   implicit val instantToSql = new InstantToSql()
   implicit val durationToSql = new DurationToSql()
+  implicit val zonedDateTimeToSql = new ZonedDateTimeToSql()
+  implicit val offsetDateTimeToSql = new OffsetDateTimeToSql()
 
 }

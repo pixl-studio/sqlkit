@@ -8,6 +8,10 @@ case class SqlColumn[T](
   name: String, primaryKey: Boolean = false
 )(implicit table: SqlTableDef[_], binder: SqlBinder[T]) {
 
+  def alias: String = {
+    if (table.alias.isEmpty) s"""${name}""" else s"""${table.alias}.${name} as "${table.alias}.${name}""""
+  }
+
   def toSqlString: String = {
     if (table.alias.isEmpty) s"""${name}""" else s"""${table.alias}.${name}"""
   }

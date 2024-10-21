@@ -23,7 +23,7 @@ class SqlInterpolation(val sc: StringContext) extends AnyVal {
           None
         }
         case col: List[SqlColumn[_]] @unchecked => {
-          sb.append(col.map(_.toSqlString).mkString(", "))
+          sb.append(col.map(_.alias).mkString(", "))
           None
         }
         case cols: SqlColumns => {

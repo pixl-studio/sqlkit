@@ -67,7 +67,7 @@ abstract class SqlTable[T <: SqlModel[T]] {
 
   protected def insertSql[K](entity: T)(implicit session: SqlSession = autoSession): SqlQuery[Unit] = {
     val model = table("")
-    val columns = model.toSql(entity)
+    val (pkColumns, columns) = model.toSql(entity).partition(_._1.primaryKey)
 
     sql"""
       INSERT INTO ${model} (${columns.map { case (column, _) => column }})

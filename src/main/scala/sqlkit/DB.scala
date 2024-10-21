@@ -5,36 +5,79 @@ import sqlkit.exceptions.UnknownDataSourceException
 import sqlkit.logger.{InMemoryLogger, SqlLogger}
 import sqlkit.query.SqlQueryCommon
 import sqlkit.session.{IsolationLevel, SqlAuto, SqlSession, SqlTx}
+import sqlkit.utils.Timing
+
+import javax.sql.DataSource
 
 
 object DB {
 
   val defaultSource = "default"
 
-  private var dataSources = Map.empty[String, HikariDataSource]
+  private var dataSources = Map.empty[String, DataSource]
+  private var dataSourcesLogging = Set.empty[String]
 
   private var queryLogger:SqlLogger = new InMemoryLogger()
 
-  def dataSource(name: String=defaultSource): HikariDataSource = {
+  def dataSource(name: String=defaultSource): DataSource = {
     dataSources.getOrElse(name, throw UnknownDataSourceException(name))
   }
 
-  def add(dataSource: HikariDataSource, name: String=defaultSource) = {
+  def add(dataSource: DataSource, name: String=defaultSource, log:Boolean=false) = {
     dataSources = dataSources + (name -> dataSource)
+    if (log){
+      dataSourcesLogging += name
+    }
   }
 
   def close(name:String=defaultSource) = {
-    dataSource(name).close()
+    dataSource(name) match {
+      case d:HikariDataSource => d.close()
+      case _ =>
+    }
   }
 
   def log(query:SqlQueryCommon[_], time:Option[Long], rows:Option[Long])(implicit session: SqlSession) = {
-    if (shouldLog){
+
+    if (shouldLog(session.dataSource)){
+
+      import scala.jdk.CollectionConverters.IteratorHasAsScala
+
+      val queryInfos = List(
+        time.map { t => Timing.timeFormat("duration", duration=t)},
+        rows.map { r =>   s"rows: ${r}"},
+        Some(s"id: ${session.uuid}")
+      ).flatten
+
+      val stackTrace = StackWalker
+        .getInstance(java.lang.StackWalker.Option.RETAIN_CLASS_REFERENCE)
+        .walk(frames => List.from(frames.skip(7).iterator().asScala))
+        .map(el => s"${el.getClassName}.${el.getMethodName}(${el.getFileName}:${el.getLineNumber})")
+        .take(10)
+
+      session.logger.debug(
+        s"""
+           |### SQL QUERY:  ${queryInfos.mkString(",  ")}
+           |${query.debugSql}
+           |Stack:  ${stackTrace.mkString("\n\t")}
+           |""".stripMargin)
+    }
+
+    if (queryLogger != null){
       queryLogger.log(query, time, rows)
     }
   }
 
-  def shouldLog : Boolean = {
-    queryLogger != null
+  def enableLog(dataSource:String) = {
+    dataSourcesLogging += dataSource
+  }
+
+  def disableLog(dataSource:String) = {
+    dataSourcesLogging -= dataSource
+  }
+
+  def shouldLog(dataSource:String) : Boolean = {
+    dataSourcesLogging.contains(dataSource)
   }
 
   def logger = {

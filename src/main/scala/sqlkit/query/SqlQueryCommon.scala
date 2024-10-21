@@ -7,6 +7,7 @@ import sqlkit.utils.Timing
 import sqlkit.{DB, SqlResult, SqlResultSet, SqlRow}
 
 import java.sql.{PreparedStatement, Statement}
+import java.time.LocalDateTime
 import java.util.UUID
 
 trait SqlQueryCommon[T] {
@@ -87,7 +88,7 @@ trait SqlQueryCommon[T] {
         namedParameter.set(ps, index)
       }
 
-      val (rawResultSet, duration) = Timing.traceOpt(ps.executeQuery(), DB.shouldLog)
+      val (rawResultSet, duration) = Timing.traceOpt(ps.executeQuery(), DB.shouldLog(session.dataSource))
 
       val rs = new SqlResultSet[T](rawResultSet, fromSql)
       val result = f(rs)
@@ -112,7 +113,7 @@ trait SqlQueryCommon[T] {
         namedParameter.set(ps, index)
       }
 
-      val (affectedRows, duration) = Timing.traceOpt(ps.executeUpdate(), DB.shouldLog)
+      val (affectedRows, duration) = Timing.traceOpt(ps.executeUpdate(), DB.shouldLog(session.dataSource))
       DB.log(this, duration, None)
 
       val rs = ps.getGeneratedKeys
@@ -146,7 +147,7 @@ trait SqlQueryCommon[T] {
           ps.addBatch()
         }
 
-        val (affectedRows, duration) = Timing.traceOpt(ps.executeBatch(), DB.shouldLog)
+        val (affectedRows, duration) = Timing.traceOpt(ps.executeBatch(), DB.shouldLog(session.dataSource))
         DB.log(this, duration, None)
 
         val rs = ps.getGeneratedKeys

@@ -24,7 +24,7 @@ object Timing {
     val result = block
     val t1 = System.nanoTime()
 
-    timePrint(name, unit, t0, t1)
+    timePrint(name, unit, t1-t0)
 
     result
   }
@@ -34,13 +34,16 @@ object Timing {
     block.map { result =>
       val t1 = System.nanoTime()
 
-      timePrint(name, unit, t0, t1)
+      timePrint(name, unit, t1-t0)
 
       result
     }
   }
 
-  def timePrint(name:String, unit:TimeUnit=TimeUnit.MILLISECONDS, t0:Long,t1:Long) = {
+  def timePrint(name:String, unit:TimeUnit=TimeUnit.MILLISECONDS, duration:Long, durationUnit:TimeUnit=TimeUnit.NANOSECONDS) = {
+    println(timeFormat(name, unit, duration, durationUnit))
+  }
+  def timeFormat(name:String, unit:TimeUnit=TimeUnit.MILLISECONDS, duration:Long, durationUnit:TimeUnit=TimeUnit.NANOSECONDS) = {
 
     val (abvr, subunit, subscale) = unit match {
       case TimeUnit.DAYS =>
@@ -65,12 +68,11 @@ object Timing {
         ("ns", TimeUnit.NANOSECONDS, 0)
     }
 
-    val duration = t1-t0
-    val time = unit.convert(duration, TimeUnit.NANOSECONDS)
+    val time = unit.convert(duration, durationUnit)
 
     val subtime = subunit.convert(duration - unit.toNanos(time), TimeUnit.NANOSECONDS)
     val subtimeStr = if (subtime>0) s".${padLeft(subtime.toString, subscale, '0')}" else ""
-    println(s"${name}: ${time}${subtimeStr}$abvr")
+    s"${name}: ${time}${subtimeStr}$abvr"
   }
 
   def padLeft(s:String, nb: Int, char: Char): String = {
