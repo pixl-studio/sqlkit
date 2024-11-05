@@ -15,5 +15,11 @@ class BooleanToSql extends SqlBinder[Boolean] {
     statement.setBoolean(index, v)
   }
 
-  def unwrap(o:String) = o.toBoolean
+  def unwrap(o:String) = {
+    o match {
+      case s:String if s == "1" => true
+      case s:String if s == "0" => false
+      case s:String =>  s.toBoolean
+    }
+  }
 }
