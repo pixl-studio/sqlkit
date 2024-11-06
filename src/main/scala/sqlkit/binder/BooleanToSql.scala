@@ -6,7 +6,7 @@ class BooleanToSql extends SqlBinder[Boolean] {
 
   override def fromSql(o: Object): Boolean = {
     o match {
-      case b:java.lang.Boolean => b
+      case b: java.lang.Boolean => b
       case _ => unwrap(o.toString)
     }
   }
@@ -15,11 +15,11 @@ class BooleanToSql extends SqlBinder[Boolean] {
     statement.setBoolean(index, v)
   }
 
-  def unwrap(o:String) = {
+  def unwrap(o: String) = {
     o match {
-      case s:String if s == "1" => true
-      case s:String if s == "0" => false
-      case s:String =>  s.toBoolean
+      case "0" => false
+      case "1" => true
+      case _ => o.toBoolean
     }
   }
 }
