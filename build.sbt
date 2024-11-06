@@ -14,7 +14,7 @@ lazy val sqlkit = project
     crossScalaVersions := Seq(Scala212, Scala213),
 
     libraryDependencies ++= Seq(
-      "com.zaxxer" % "HikariCP" % "5.1.0",
+      "com.zaxxer" % "HikariCP" % "6.0.0",
 
       "mysql" % "mysql-connector-java" % "8.0.33" % "test",
       "org.scalatest" %% "scalatest" % "3.2.11" % "test",
