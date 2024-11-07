@@ -48,6 +48,10 @@ class SqlInterpolation(val sc: StringContext) extends AnyVal {
             q.params
           }
         }
+        case q: SqlQuery[_] => {
+          sb.append(q.rawQuery)
+          q.params
+        }
         case s: SqlUnsafe => {
           sb.append(s.value)
           None
