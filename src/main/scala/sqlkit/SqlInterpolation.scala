@@ -50,7 +50,7 @@ class SqlInterpolation(val sc: StringContext) extends AnyVal {
         }
         case q: SqlQuery[_] => {
           sb.append(q.rawQuery)
-          q.params
+          Some(q.params)
         }
         case s: SqlUnsafe => {
           sb.append(s.value)
