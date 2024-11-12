@@ -48,24 +48,24 @@ object SqlBinder {
 
   implicit def optSql[T](implicit binder: SqlBinder[T]): SqlBinder[Option[T]] = binder.toOption
 
-  implicit val uuidToSql = new UUIDToSql()
-  implicit val stringToSql = new StringToSql()
+  implicit val uuidToSql: UUIDToSql = new UUIDToSql()
+  implicit val stringToSql: StringToSql = new StringToSql()
 
-  implicit val booleanToSql = new BooleanToSql()
+  implicit val booleanToSql: BooleanToSql = new BooleanToSql()
 
-  implicit val shortToSql = new ShortToSql()
-  implicit val intToSql = new IntToSql()
-  implicit val longToSql = new LongToSql()
-  implicit val floatToSql = new FloatToSql()
-  implicit val doubleToSql = new DoubleToSql()
-  implicit val bigDecimalToSql = new BigDecimalToSql()
+  implicit val shortToSql: ShortToSql = new ShortToSql()
+  implicit val intToSql: IntToSql = new IntToSql()
+  implicit val longToSql: LongToSql = new LongToSql()
+  implicit val floatToSql: FloatToSql = new FloatToSql()
+  implicit val doubleToSql: DoubleToSql = new DoubleToSql()
+  implicit val bigDecimalToSql: BigDecimalToSql = new BigDecimalToSql()
 
-  implicit val localDateToSql = new LocalDateToSql()
-  implicit val localDateTimeToSql = new LocalDateTimeToSql()
-  implicit val localTimeToSql = new LocalTimeToSql()
-  implicit val instantToSql = new InstantToSql()
-  implicit val durationToSql = new DurationToSql()
-  implicit val zonedDateTimeToSql = new ZonedDateTimeToSql()
-  implicit val offsetDateTimeToSql = new OffsetDateTimeToSql()
+  implicit val localDateToSql: LocalDateToSql = new LocalDateToSql()
+  implicit val localDateTimeToSql: LocalDateTimeToSql = new LocalDateTimeToSql()
+  implicit val localTimeToSql: LocalTimeToSql = new LocalTimeToSql()
+  implicit val instantToSql: InstantToSql = new InstantToSql()
+  implicit val durationToSql: DurationToSql = new DurationToSql()
+  implicit val zonedDateTimeToSql: ZonedDateTimeToSql = new ZonedDateTimeToSql()
+  implicit val offsetDateTimeToSql: OffsetDateTimeToSql = new OffsetDateTimeToSql()
 
 }
