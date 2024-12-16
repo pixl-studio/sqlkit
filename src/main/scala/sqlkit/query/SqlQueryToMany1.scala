@@ -7,8 +7,8 @@ import sqlkit.session.SqlSession
 import scala.util.Try
 
 case class SqlQueryToMany1[R, R1](
-  rawQuery: String = "",
   query: String,
+  rawQuery: String = "",
   params: List[SqlParam] = Nil,
   paramsIndexes: List[String] = Nil,
   one: SqlRow => R,

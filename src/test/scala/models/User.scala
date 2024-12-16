@@ -107,6 +107,36 @@ object User extends SqlTableAutoInc[User] {
     }.list
   }
 
+  def qq(email: String)(implicit session: SqlSession = autoSession) = {
+
+    withSql(User.table, UserRole.table) { case (user, userRole) =>
+      sql"""
+          SELECT ${user.*}, ${userRole.*}
+          FROM ${user}
+          JOIN ${userRole}
+          WHERE ${user.email} = $email
+        """.as { row => user.fromSql(row) }
+    }.list
+  }
+
+  def qq2(email: String)(implicit session: SqlSession = autoSession) = {
+
+    withSql(User.table, UserRole.table) { case (user, userRole) =>
+      sql"""
+          SELECT ${user.*}, ${userRole.*}
+          FROM ${user}
+          JOIN ${userRole}
+          WHERE ${user.email} = $email
+        """.oneToMany(
+        row => user.fromSql(row),
+        row => userRole.fromSql(row)
+      ).list.map { kk =>
+
+        kk
+      }
+    }
+  }
+
   def byRole(name: String)(implicit session: SqlSession = autoSession) = {
 
     Timing.time("query")(withSql(User.table, Role.table, UserRole.table) { case (user, role, userRole) =>

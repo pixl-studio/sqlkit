@@ -48,11 +48,17 @@ class ModelTest extends AnyFunSuite {
 
     implicit val dbSession = SqlAuto()
 
-    User.byId(1L)
+    //User.byId(1L)
     //User.create(User(0L, 2L, "qq"))
     //User.update(User(0L, 2L, "kk"))
     //User.delete(User(0L, 2L, "kk"))
-    User.byName("user_0")
+    val qq = User.qq("user_0")
+
+    println("----")
+    println(qq)
+
+    val qq2 = User.qq2("user_0")
+
     //User.byName2("byName2 1")
 
     //val r = Role(name= "sqlkit/test")
@@ -65,6 +71,7 @@ class ModelTest extends AnyFunSuite {
     //Role.update(r)
     //Role.byId(UUID.randomUUID)
 
+    /*
     val queries = DB.logger.get(dbSession.uuid)
     queries.map { query =>
 
@@ -76,6 +83,8 @@ class ModelTest extends AnyFunSuite {
            |rows: ${query.rows.getOrElse("-")}
            |query: ${query.sql}""".stripMargin)
     }
+
+     */
 
     DB.close()
   }
