@@ -31,6 +31,8 @@ object SqlParamValue {
   def wrap(p:Any): SqlParamValue = {
     p match {
 
+      case v:Boolean => SqlParamValue(v)
+
       case v:Short => SqlParamValue(v)
       case v:Int => SqlParamValue(v)
       case v:Long => SqlParamValue(v)
@@ -47,6 +49,7 @@ object SqlParamValue {
       case v:UUID => SqlParamValue(v)
 
       case v:SqlParamValue => v
+
       case v:Any => SqlParamValue(v.toString)
     }
   }
