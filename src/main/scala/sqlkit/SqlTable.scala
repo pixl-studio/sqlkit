@@ -90,7 +90,7 @@ abstract class SqlTable[T <: SqlModel[T]] {
       val (pkColumns, columns) = model.toSql(entity).partition(_._1.primaryKey)
       sql"""
         UPDATE ${model}
-        SET ${SqlColumns(columns, " ,")}
+        SET ${SqlColumns(columns, ", ")}
         WHERE ${SqlColumns(pkColumns, " AND ")}
       """
     }.exec

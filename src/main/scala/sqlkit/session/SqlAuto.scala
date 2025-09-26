@@ -12,6 +12,8 @@ case class SqlAuto(
 ) extends SqlSession {
 
   protected def getConnection: Connection = {
-    DB.dataSource(dataSource).getConnection
+    val connection = DB.dataSource(dataSource).getConnection
+    connection.setAutoCommit(true)
+    connection
   }
 }
