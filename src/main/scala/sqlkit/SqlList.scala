@@ -1,14 +1,14 @@
 package sqlkit
 
 case class SqlList[T](
-  data: List[T],
+  rows: List[T],
   count: Long,
-  offset: Option[Long],
-  limit: Option[Long],
+  offset: Option[Long] = None,
+  limit: Option[Long] = None,
 ){
   def map[X](f:T => X): SqlList[X] = {
     this.copy(
-      data = data.map(f)
+      rows = rows.map(f)
     )
   }
 }
