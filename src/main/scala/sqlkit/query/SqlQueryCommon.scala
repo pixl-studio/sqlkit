@@ -9,6 +9,7 @@ import sqlkit.{DB, SqlResult, SqlResultSet, SqlRow}
 import java.sql.{PreparedStatement, Statement}
 import java.time.LocalDateTime
 import java.util.UUID
+import java.util.regex.Matcher
 
 trait SqlQueryCommon[T] {
 
@@ -186,7 +187,7 @@ trait SqlQueryCommon[T] {
         param <- params.find(_.name == name)
       } yield {
         param.set(ps, i)
-        ps.value
+        Matcher.quoteReplacement(ps.value)
       }
       i+=1
       paramSql.getOrElse("")
