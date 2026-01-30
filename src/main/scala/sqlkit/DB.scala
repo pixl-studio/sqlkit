@@ -17,35 +17,35 @@ object DB {
   private var dataSources = Map.empty[String, DataSource]
   private var dataSourcesLogging = Set.empty[String]
 
-  private var queryLogger:SqlLogger = new InMemoryLogger()
+  private var queryLogger: SqlLogger = null //new InMemoryLogger()
 
-  def dataSource(name: String=defaultSource): DataSource = {
+  def dataSource(name: String = defaultSource): DataSource = {
     dataSources.getOrElse(name, throw UnknownDataSourceException(name))
   }
 
-  def add(dataSource: DataSource, name: String=defaultSource, log:Boolean=false) = {
+  def add(dataSource: DataSource, name: String = defaultSource, log: Boolean = false) = {
     dataSources = dataSources + (name -> dataSource)
-    if (log){
+    if (log) {
       dataSourcesLogging += name
     }
   }
 
-  def close(name:String=defaultSource) = {
+  def close(name: String = defaultSource) = {
     dataSource(name) match {
-      case d:HikariDataSource => d.close()
+      case d: HikariDataSource => d.close()
       case _ =>
     }
   }
 
-  def log(query:SqlQueryCommon[_], time:Option[Long], rows:Option[Long])(implicit session: SqlSession) = {
+  def log(query: SqlQueryCommon[_], time: Option[Long], rows: Option[Long])(implicit session: SqlSession) = {
 
-    if (shouldLog(session.dataSource)){
+    if (shouldLog(session.dataSource)) {
 
       import scala.jdk.CollectionConverters.IteratorHasAsScala
 
       val queryInfos = List(
-        time.map { t => Timing.timeFormat("duration", duration=t)},
-        rows.map { r =>   s"rows: ${r}"},
+        time.map { t => Timing.timeFormat("duration", duration = t) },
+        rows.map { r => s"rows: ${r}" },
         Some(s"id: ${session.uuid}")
       ).flatten
 
@@ -63,20 +63,20 @@ object DB {
            |""".stripMargin)
     }
 
-    if (queryLogger != null){
+    if (queryLogger != null) {
       queryLogger.log(query, time, rows)
     }
   }
 
-  def enableLog(dataSource:String) = {
+  def enableLog(dataSource: String) = {
     dataSourcesLogging += dataSource
   }
 
-  def disableLog(dataSource:String) = {
+  def disableLog(dataSource: String) = {
     dataSourcesLogging -= dataSource
   }
 
-  def shouldLog(dataSource:String) : Boolean = {
+  def shouldLog(dataSource: String): Boolean = {
     dataSourcesLogging.contains(dataSource)
   }
 
@@ -91,7 +91,7 @@ object DB {
   }
 
   def withTransaction[T](dataSource: String = DB.defaultSource,
-    schema: Option[String] = None,
-    isolationLevel: IsolationLevel = IsolationLevel.Default
-  )(f: SqlTx => T): T = SqlTx.localTx(dataSource, schema, isolationLevel)(f)
+                          schema: Option[String] = None,
+                          isolationLevel: IsolationLevel = IsolationLevel.Default
+                        )(f: SqlTx => T): T = SqlTx.localTx(dataSource, schema, isolationLevel)(f)
 }
